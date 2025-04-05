@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import path from 'path';
 import { Stagehand } from '@browserbasehq/stagehand';
 import fs from 'fs';
 
@@ -1306,6 +1307,7 @@ async function handleError(page, errorInfo, stagehandInstance) {
   try {
     console.log("Taking error screenshot for analysis...");
     const screenshotPath = path.join('screenshots', `error-${Date.now()}.png`);
+    console.log(screenshotPath)
     await page.screenshot({ path: screenshotPath });
     console.log(`Screenshot saved to ${screenshotPath}`);
     
