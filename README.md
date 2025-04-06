@@ -25,7 +25,7 @@ Ensure that your environment variables for ANTHROPIC_API_KEY, BROWSERBASE_API_KE
 4. The logs will tell you want has happened after the browser closes
 5. To generate multiple test responses, enter the number of test responses you want and click "Generate Headless Test Responses". This time, no browser will pop up since the instances are headless (though, I'm able to see the survey-taking sessions in real-time through the Browserbase platform). The logs will again provide step-by-step details upon completion.
 
-One note — the application currently allows for just 3 test responses — this is purely because I've only paid for the Hobby Plan (which allows for a max of 3 concurrent browser instances). Upgrading to a higher tier plan would easily enable many more test responses to be generated simultaneously.
+One note — the application currently allows for just 3 test responses — this is purely because I've only paid for the Hobby Plan on Browserbase (which allows for a max of 3 concurrent browser instances). Upgrading to a higher tier plan would easily enable many more test responses to be generated simultaneously.
 
 
 ## Error Handling Mechanisms
