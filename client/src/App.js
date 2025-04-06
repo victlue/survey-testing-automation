@@ -165,7 +165,7 @@ function App() {
   
   const validateConcurrentRuns = (value) => {
     const num = parseInt(value);
-    return !isNaN(num) && num > 0 && num <= 5 && Number.isInteger(num);
+    return !isNaN(num) && num > 0 && num <= 3 && Number.isInteger(num);
   };
   
   const handleConcurrentRunsChange = (e) => {
@@ -246,7 +246,7 @@ function App() {
   
   const runHeadlessTests = () => {
     if (!validateConcurrentRuns(concurrentRuns)) {
-      alert('Please enter a valid number of concurrent runs (1-5)');
+      alert('Please enter a valid number of concurrent runs (1-3)');
       return;
     }
     
@@ -394,7 +394,7 @@ function App() {
         <div className="run-headless-test">
           <div className="headless-controls">
             <div className="concurrent-input">
-              <label htmlFor="concurrent-runs">Number of runs (1-5):</label>
+              <label htmlFor="concurrent-runs">Number of runs (1-3):</label>
               <input
                 id="concurrent-runs"
                 type="number"

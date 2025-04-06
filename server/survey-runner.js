@@ -18,6 +18,7 @@ const { surveyUrl, customQuestions, headless = false, runId = 0 } = config;
 
 async function completeSurvey() {
   // Initialize Stagehand
+  console.log(headless)
 
   console.log(`Mode: ${headless ? 'Headless' : 'Headed'}`);
   if (runId) {
@@ -26,19 +27,36 @@ async function completeSurvey() {
   const useBrowserbase = process.env.USE_BROWSERBASE === 'true';
   console.log(`Environment: ${useBrowserbase ? 'BROWSERBASE' : 'LOCAL'}`);
   
-  const stagehand = new Stagehand({
-    env: useBrowserbase ? "BROWSERBASE" : "LOCAL",
-    modelName: "claude-3-7-sonnet-latest", // or another supported Anthropic model
-    modelClientOptions: {
-      apiKey: process.env.ANTHROPIC_API_KEY, // Your Anthropic API key
-    },
-    localBrowserLaunchOptions: {
-      headless: headless // Use the headless parameter from config
-    },
-    browserbaseOptions: useBrowserbase ? {
-      apiKey: process.env.BROWSERBASE_API_KEY, // Browserbase API key
-    } : undefined
-  });
+  let stagehand;
+      if (headless===true){
+       stagehand = new Stagehand({
+        env: useBrowserbase ? "BROWSERBASE" : "LOCAL",
+        modelName: "claude-3-7-sonnet-latest", // or another supported Anthropic model
+        modelClientOptions: {
+          apiKey: process.env.ANTHROPIC_API_KEY, // Your Anthropic API key
+        },
+        localBrowserLaunchOptions: {
+          headless: headless // Use the headless parameter from config
+        },
+        browserbaseOptions: useBrowserbase ? {
+          apiKey: process.env.BROWSERBASE_API_KEY, // Browserbase API key
+          projectId: process.env.BROWSERBASE_PROJECT_ID,
+        } : undefined
+      });
+    }
+    else{
+      console.log("Headed Version")
+       stagehand = new Stagehand({
+        env: "LOCAL", // or "BROWSERBASE" if you're using Browserbase
+        modelName: "claude-3-7-sonnet-latest", // or another supported Anthropic model
+        modelClientOptions: {
+          apiKey: process.env.ANTHROPIC_API_KEY, // Your Anthropic API key
+        },
+        localBrowserLaunchOptions: {
+          headless: false // Set to false if you want to see the browser
+        }
+      });
+    }
   
   await stagehand.init();
   const page = stagehand.page;
@@ -1305,24 +1323,53 @@ async function handleError(page, errorInfo, stagehandInstance) {
   
   // Second attempt: Use screenshot analysis to get precise error details
   try {
-    console.log("Taking error screenshot for analysis...");
-    const screenshotPath = path.join('screenshots', `error-${Date.now()}.png`);
-    console.log(screenshotPath)
-    await page.screenshot({ path: screenshotPath });
-    console.log(`Screenshot saved to ${screenshotPath}`);
+    // console.log("Taking error screenshot for analysis...");
+    // const screenshotPath = path.join('screenshots', `error-${Date.now()}.png`);
+    // console.log(screenshotPath)
+
+    let base64Image;
+    try {
+      console.log("Taking error screenshot for analysis...");
+      
+      // Capture directly as buffer (no file path needed)
+      const imageBuffer = await page.screenshot();
+      console.log(`Screenshot captured as buffer: ${imageBuffer.length} bytes`);
+      
+      // Convert buffer to base64 (which is what you want for the API)
+      base64Image = imageBuffer.toString('base64');
+      console.log(`Converted to base64 string of length: ${base64Image.length}`);
+      
+    } catch (error) {
+      console.error(`Screenshot error: ${error.toString()}`);
+    }
+
+
     
-    // Import file system module
-    const { readFile } = await import('fs/promises');
+    // await page.screenshot({ path: screenshotPath });
+    // try {
+    //   console.log("Current working directory:", process.cwd());
+    //   console.log("Attempting to write to:", path.resolve(screenshotPath));
+    //   await page.screenshot({ path: screenshotPath });
+    //   console.log("Screenshot write successful");
+    // } catch (error) {
+    //   console.error("Screenshot error details:", error);
+    // }
+    // console.log(`Screenshot saved to ${screenshotPath}`);
     
-    // Read the screenshot file
-    const imageBuffer = await readFile(screenshotPath);
-    const base64Image = imageBuffer.toString('base64');
+    // // Import file system module
+    // const { readFile } = await import('fs/promises');
+    
+    // // Read the screenshot file
+    // const imageBuffer = await readFile(screenshotPath);
+    // const base64Image = imageBuffer.toString('base64');
     
     // Get the same API key that Stagehand is using
     const AnthropicApiKey = process.env.ANTHROPIC_API_KEY;
     console.log("Sending request to Anthropic API for error analysis...");
-    
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    let response;
+    if (base64Image) {
+      console.log("Making request to API");
+      response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1353,9 +1400,12 @@ async function handleError(page, errorInfo, stagehandInstance) {
         ]
       })
     });
+    }
     
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+    if (response){
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
     }
     
     // Extract the analysis from the response

@@ -134,7 +134,7 @@ input[type="text"], input[type="number"] {
 
 .add-question-btn {
   padding: 10px 15px;
-  background-color: #38d9a9;
+  background-color: #4dabf7;
   color: white;
   border: none;
   border-radius: 4px;
@@ -176,7 +176,7 @@ input[type="text"], input[type="number"] {
 
 .run-test-btn {
   padding: 12px 24px;
-  background-color: #4c6ef5;
+  background-color: #000000;
   color: white;
   border: none;
   border-radius: 4px;
@@ -186,7 +186,7 @@ input[type="text"], input[type="number"] {
 }
 
 .headless-btn {
-  background-color: #9775fa;
+  background-color: #000000;
 }
 
 .logs-section {
