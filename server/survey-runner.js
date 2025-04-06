@@ -3,10 +3,8 @@ import path from 'path';
 import { Stagehand } from '@browserbasehq/stagehand';
 import fs from 'fs';
 
-// Initialize config
 dotenv.config();
 
-// Read the config file passed as argument
 const configFile = process.argv[2];
 if (!configFile) {
   console.error('Config file not specified');
@@ -17,7 +15,6 @@ const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 const { surveyUrl, customQuestions, headless = false, runId = 0 } = config;
 
 async function completeSurvey() {
-  // Initialize Stagehand
   console.log(headless)
 
   console.log(`Mode: ${headless ? 'Headless' : 'Headed'}`);
@@ -31,15 +28,15 @@ async function completeSurvey() {
       if (headless===true){
        stagehand = new Stagehand({
         env: useBrowserbase ? "BROWSERBASE" : "LOCAL",
-        modelName: "claude-3-7-sonnet-latest", // or another supported Anthropic model
+        modelName: "claude-3-7-sonnet-latest",
         modelClientOptions: {
-          apiKey: process.env.ANTHROPIC_API_KEY, // Your Anthropic API key
+          apiKey: process.env.ANTHROPIC_API_KEY,
         },
         localBrowserLaunchOptions: {
           headless: headless // Use the headless parameter from config
         },
         browserbaseOptions: useBrowserbase ? {
-          apiKey: process.env.BROWSERBASE_API_KEY, // Browserbase API key
+          apiKey: process.env.BROWSERBASE_API_KEY,
           projectId: process.env.BROWSERBASE_PROJECT_ID,
         } : undefined
       });
@@ -47,13 +44,13 @@ async function completeSurvey() {
     else{
       console.log("Headed Version")
        stagehand = new Stagehand({
-        env: "LOCAL", // or "BROWSERBASE" if you're using Browserbase
-        modelName: "claude-3-7-sonnet-latest", // or another supported Anthropic model
+        env: "LOCAL",
+        modelName: "claude-3-7-sonnet-latest",
         modelClientOptions: {
-          apiKey: process.env.ANTHROPIC_API_KEY, // Your Anthropic API key
+          apiKey: process.env.ANTHROPIC_API_KEY,
         },
         localBrowserLaunchOptions: {
-          headless: false // Set to false if you want to see the browser
+          headless: false
         }
       });
     }
