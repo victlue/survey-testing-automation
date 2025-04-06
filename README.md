@@ -21,11 +21,11 @@ Ensure that your environment variables for ANTHROPIC_API_KEY, BROWSERBASE_API_KE
 2. Add any questions where you need to specify the answer distributions, and remove the ones where you don't. The inputs are currently pre-set to fit the following survey: https://drive.google.com/file/d/1dObSYogI_cjMpcHH5eUjv4_CzOfX2vuN/view?usp=sharing <br>which is set up at the following Alchemer link: https://survey.alchemer.com/s3/8259504/Victor-Test <br>And Qualtrics link: https://qualtricsxm3cybtg8md.qualtrics.com/jfe/form/SV_9Qz4tRcfMBiXlB4
 <br>But of course, you can customize the distributions on the front end however you'd like or change the inputs entirely if you're generating test responses for a different survey.
 ![Frontend display](images/frontend-screenshot.png)
-3. Click "Generate Headed Test Run". Here, a browser will pop up on your screen and automatically navigate through your survey, answering questions based on your desired response distributions
+3. Scroll down and click "Generate Headed Test Run" if you'd like to first visually see a headed browser do a single run through the survey. Here, a browser will pop up on your screen and automatically navigate through your survey, answering questions based on your desired response distributions
 4. The logs will tell you what has happened after the browser closes
 5. To generate multiple test responses, enter the number of test responses you want and click "Generate Headless Test Responses". This time, no browser will pop up since the instances are headless (though, I'm able to see videos of all the survey-taking sessions in real-time through the Browserbase platform). The logs will again provide step-by-step details upon completion.
 
-One note — the application currently allows for just 3 test responses — this is purely because I've only paid for the Hobby Plan on Browserbase (which allows for a max of 3 concurrent browser instances). Upgrading to a higher tier plan would easily enable many more test responses to be generated simultaneously.
+**One note — the application currently allows for just 3 test responses — this is purely because I've only paid for the Hobby Plan on Browserbase (which allows for a max of 3 concurrent browser instances).** Upgrading to a higher tier plan would easily enable many more test responses to be generated simultaneously.
 
 
 ## Error Handling Mechanisms
